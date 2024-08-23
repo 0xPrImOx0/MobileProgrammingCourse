@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Writing DOM</title>
+</head>
+<body>
+
+<!-- # no more additional HTML Tags -->
+<div id="app"></div>
+
+<!-- # write only within the script tags -->
+<script>
+    function createRegistrationForm() {
+        const app = document.getElementById('app');
+        const h1 = document.createElement('h1');
+
+        const form = document.createElement('form');
+        form.className = 'form-group';
+        form.method = 'GET';
+
+        const fields = [
+            {id : 'firstName', label : 'First Name: ', type : 'text', required : true, placeHolder : 'Enter your First Name'},
+            {id : 'lastName', label : 'Last Name: ', type : 'text', required : true, placeHolder : 'Enter your Last Name'},
+            {id : 'emailAddress', label : 'Email Address: ', type : 'email', required : true, placeHolder : 'Enter your Email Address'},
+            {id : 'password', label : 'Password: ', type : 'password', required : true, placeHolder : 'Enter your Password'},
+            {id: 'confirmPassword', label : 'Confirm Password: ', type : 'password', required : true, placeHolder : 'Confirm your Password'}
+        ];
+
+        fields.forEach(field => {
+            const label = document.createElement('label');
+            label.htmlFor = field.id;
+            label.textContent = field.label;
+
+            const input = document.createElement('input');
+            input.id = field.id;
+            input.type = field.type;
+            input.placeholder = field.placeHolder;
+            input.required = field.required;
+
+            form.append(label, input);
+        })
+
+        const registerButton = document.createElement('button');
+        registerButton.textContent = 'Register Now';
+        registerButton.type = 'button';
+        registerButton.addEventListener('click', validateRegistrationForm);
+        form.appendChild(registerButton);
+
+        
+        document.body.insertBefore(h1, app);
+        
+        app.appendChild(form);
+
+        stylingFunction();
+    }
+
+    function validateRegistrationForm() {
+        const form = document.querySelector('form').style;
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+        const emailAddress = document.getElementById('emailAddress').value;
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        let error = '';
+
+        const inputFields = ['firstName', 'lastName', 'emailAddress', 'password', 'confirmPassword'];
+        inputFields.some (field => {
+            const value = document.getElementById(field).value;
+            if (!value) {
+                error = `Please filled out all of the input fields. You forgot to fill out ${document.querySelector(`label[for='${field}']`).textContent.slice(0, -2)} input field.`;
+                return true;
+            }
+        });
+
+        if (error) {
+            form.boxShadow = '0px 0px 8px rgba(255, 0, 0, 1)';
+            alert(error);
+            return;
+        } else if (!emailPattern.test(emailAddress)) {
+            form.boxShadow = '0px 0px 8px rgba(255, 0, 0, 1)';
+            alert('Please enter a valid email address (e.g., "name@domain.com" or "name@domain.com.ph".).');
+            return;
+        } else if (password !== confirmPassword) {
+            form.boxShadow = '0px 0px 8px rgba(255, 0, 0, 1)';
+            alert('Passwords do not match');
+            return;
+        } else {
+            form.boxShadow = '0px 0px 8px rgba(0, 0, 255, 1)';
+            const successMessage = document.createElement('div');
+            successMessage.textContent = 'Registration Successful! You are now officially registered!';
+            successMessage.style.width = '25%';
+            successMessage.style.position = 'fixed';
+            successMessage.style.top = '50%';
+            successMessage.style.left = '50%';
+            successMessage.style.transform = 'translate(-50%, -50%)';
+            successMessage.style.backgroundColor = '#333';
+            successMessage.style.color = 'red';
+            successMessage.style.padding = '20px';
+            successMessage.style.borderRadius = '10px';
+            successMessage.style.boxShadow = '0px 4px 8px rgba(0, 0, 255, 0.3)';
+            successMessage.style.zIndex = '1000';
+            successMessage.style.fontWeight = 'bold';
+            
+            const closeButton = document.createElement('button');
+            closeButton.textContent = 'CLOSE'
+            closeButton.style.color = 'white';
+            closeButton.style.backgroundColor = 'gray';
+            closeButton.style.width = '15%';
+            closeButton.style.height = '100%';
+            closeButton.style.padding = '0.5rem';
+            closeButton.style.marginLeft = '85%';
+            closeButton.style.marginTop = '1rem';
+            closeButton.addEventListener('click', function() {
+                successMessage.style.display = 'none';
+            });
+            
+            successMessage.appendChild(closeButton);
+            document.body.appendChild(successMessage);
+
+            return true;
+        }
+    }
+
+    function stylingFunction() {
+        const body = document.body.style;
+        body.backgroundColor = 'papayawhip';
+        body.margin = '20px 100px';
+        body.fontFamily = `'Times New Roman', times, serif`;
+        body.fontSize = '1.2rem';
+        body.boxSizing = 'border-box';
+
+        const h1 = document.querySelector('h1');
+        h1.textContent = 'Registration Form';
+        h1.style.display = 'flex';
+        h1.style.justifyContent = 'center';
+        h1.style.marginTop = '5%';
+        
+
+        const div = document.querySelector('div').style;
+        div.width = '100%';
+        div.display = 'flex';
+        div.justifyContent = 'center';
+        div.alignItems = 'center';
+        div.position = 'fixed';
+        div.top = '50%';
+        div.left = '50%';
+        div.transform = 'translate(-50%, -50%)';
+        
+        const form = document.querySelector('form').style;
+        form.border = '2px solid black';
+        form.boxShadow = '0px 0px 8px rgba(0, 0, 255, 0.5)';
+        form.backgroundColor = '#ebe2e1';
+        form.borderRadius = '2.5rem';
+        form.display = 'grid';
+        form.gap = '1rem';
+        form.width = '30%';
+        form.height = '65%';
+        form.padding = '2rem';
+
+        const inputs = ['firstName', 'lastName', 'emailAddress', 'password', 'confirmPassword'];
+        inputs.forEach(input => {
+            document.getElementById(input).style.padding = '0.5rem';
+            document.getElementById(input).style.borderRadius = '10px';
+            document.getElementById(input).style.fontSize = '1rem';
+            document.getElementById(input).style.paddingInline = '0.7em';
+            
+        });
+
+        const button = document.querySelector('button').style;
+        button.marginInline = '25%';
+        button.marginTop = '1rem';
+        button.borderRadius = '10px'
+        button.paddingBlock = '0.5rem';
+        button.cursor = 'pointer';
+    };
+
+
+    createRegistrationForm();
+</script>
+
+</body>
+</html>
